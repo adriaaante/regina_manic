@@ -1,0 +1,13 @@
+{
+  "name": "Regina Nails — мастер маникюра",
+  "short_name": "Regina Nails",
+  "lang": "ru",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#FBF6F2",
+  "theme_color": "#8E2F4D",
+  "icons": [
+    { "src": "assets/img/logo-mark.svg", "sizes": "any", "type": "image/svg+xml" },
+    { "src": "assets/img/apple-touch-icon.png", "sizes": "180x180", "type": "image/png" }
+  ]
+}

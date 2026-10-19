@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Disallow: /gift-studio.html
+Disallow: /gift-api.php
+Disallow: /gift-data/
+
+Sitemap: https://reginanails.ru/sitemap.xml
