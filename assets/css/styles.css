@@ -261,7 +261,7 @@ h1 em,h2 em{color:var(--c-primary);font-weight:600;}
 .hero__badge strong{display:block;font-size:14.5px;}
 .hero__badge span{color:var(--c-muted);}
 .hero__badge-ico{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;background:var(--c-blush);color:var(--c-primary);font-size:18px;flex-shrink:0;}
-.hero__badge--a{left:0;top:12%;animation-delay:1.5s,2.6s;}
+.hero__badge--a{left:0;bottom:36%;animation-delay:1.5s,2.6s;}
 .hero__badge--b{right:0;bottom:14%;animation-delay:1.8s,3s;}
 .hero__badge--b strong{font-family:var(--f-display);font-style:italic;font-size:22px;font-weight:600;color:var(--c-primary);line-height:1;}
 @keyframes floaty2{0%,100%{translate:0 0;}50%{translate:0 -8px;}}
