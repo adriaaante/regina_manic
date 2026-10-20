@@ -41,6 +41,7 @@ body{
   font-family:var(--f-body);font-size:16px;line-height:1.65;color:var(--c-ink);
   background:var(--c-bg);-webkit-font-smoothing:antialiased;overflow-x:hidden;
 }
+@supports (overflow:clip){html,body{overflow-x:clip;}}
 body.no-scroll{overflow:hidden;}
 img,svg{display:block;max-width:100%;}
 img{height:auto;}
@@ -186,27 +187,45 @@ h1 em,h2 em{color:var(--c-primary);font-weight:600;}
 .hero__text > *:nth-child(5){animation-delay:.66s;}
 @keyframes heroIn{to{opacity:1;transform:none;}}
 
-/* --- визуал: веер типсов-палитры вокруг флакона лака --- */
-.hero__visual{position:relative;height:clamp(420px,52vw,600px);}
-.hero__halo{position:absolute;left:50%;top:52%;width:86%;aspect-ratio:1;transform:translate(-50%,-50%);border-radius:50%;
+/* --- визуал: портрет Регины в арке + веер типсов и флакон лака --- */
+.hero__visual{position:relative;height:clamp(520px,46vw,640px);}
+.hero__halo{position:absolute;left:50%;top:46%;width:96%;aspect-ratio:1;transform:translate(-50%,-50%);border-radius:50%;
   background:radial-gradient(circle,#fff 0%,rgba(255,255,255,.6) 35%,rgba(241,218,213,0) 70%);}
-.hero__ring{position:absolute;left:50%;top:52%;width:74%;aspect-ratio:1;transform:translate(-50%,-50%);border-radius:50%;border:1px dashed rgba(201,163,106,.55);animation:spin 60s linear infinite;}
+.hero__ring{position:absolute;left:50%;top:46%;width:92%;aspect-ratio:1;transform:translate(-50%,-50%);border-radius:50%;border:1px dashed rgba(201,163,106,.55);animation:spin 70s linear infinite;}
 @keyframes spin{to{transform:translate(-50%,-50%) rotate(360deg);}}
-.fan{position:absolute;left:50%;bottom:22%;width:0;height:0;}
+
+.hero__portrait,.hero__arch{position:absolute;left:50%;top:2%;width:min(66%,400px);aspect-ratio:4/5;border-radius:999px 999px 36px 36px;}
+.hero__arch{transform:translate(calc(-50% + 18px),18px);border:1.5px solid var(--c-accent);opacity:0;animation:fadeIn 1.2s var(--ease) .6s forwards;}
+@keyframes fadeIn{to{opacity:1;}}
+.hero__portrait{
+  margin:0;overflow:hidden;z-index:1;border:7px solid #fff;background:var(--c-blush);
+  box-shadow:0 34px 80px rgba(94,25,50,.24),0 8px 24px rgba(94,25,50,.12);
+  transform:translateX(-50%);opacity:0;animation:portraitIn 1.3s var(--ease) .1s forwards;
+}
+@keyframes portraitIn{from{opacity:0;transform:translate(-50%,36px) scale(.96);}to{opacity:1;transform:translate(-50%,0) scale(1);}}
+.hero__portrait img{width:100%;height:100%;object-fit:cover;object-position:50% 28%;}
+.hero__portrait::after{ /* глянцевый отблеск по фото */
+  content:'';position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(110deg,transparent 40%,rgba(255,255,255,.35) 50%,transparent 60%);
+  transform:translateX(-120%);animation:certShine 9s ease-in-out 1.6s infinite;
+}
+
+/* мини-веер палитры, выходящий из-за флакона */
+.fan{position:absolute;left:25%;bottom:15%;width:0;height:0;z-index:2;}
 .fan__item{
-  position:absolute;left:-23px;bottom:0;width:46px;height:clamp(230px,26vw,300px);
+  position:absolute;left:-17px;bottom:0;width:34px;height:clamp(150px,14vw,190px);
   transform-origin:50% 100%;transform:rotate(0deg) scale(.6);opacity:0;
-  animation:fanOpen 1.5s var(--ease) forwards;animation-delay:calc(.5s + var(--i) * .07s);
+  animation:fanOpen 1.4s var(--ease) forwards;animation-delay:calc(.8s + var(--i) * .08s);
 }
 @keyframes fanOpen{to{transform:rotate(var(--r)) scale(1);opacity:1;}}
-.fan__sway{position:absolute;inset:0;transform-origin:50% 100%;animation:sway 6s ease-in-out infinite;animation-delay:calc(2s + var(--i) * .15s);}
-@keyframes sway{0%,100%{transform:rotate(0deg);}50%{transform:rotate(2.2deg);}}
-.fan__stick{position:absolute;left:50%;top:38%;bottom:0;width:3px;margin-left:-1.5px;border-radius:3px;background:linear-gradient(180deg,rgba(255,255,255,.9),rgba(201,163,106,.5));}
+.fan__sway{position:absolute;inset:0;transform-origin:50% 100%;animation:sway 6s ease-in-out infinite;animation-delay:calc(2.2s + var(--i) * .15s);}
+@keyframes sway{0%,100%{transform:rotate(0deg);}50%{transform:rotate(3deg);}}
+.fan__stick{position:absolute;left:50%;top:38%;bottom:0;width:2.5px;margin-left:-1.25px;border-radius:3px;background:linear-gradient(180deg,#fff,rgba(201,163,106,.6));}
 .tip{
-  position:absolute;left:0;top:0;width:46px;height:40%;
+  position:absolute;left:0;top:0;width:100%;height:40%;
   border-radius:50% 50% 44% 44% / 64% 64% 36% 36%;
   background:var(--tip,#c33);
-  box-shadow:inset -6px -10px 18px rgba(0,0,0,.18),inset 6px 6px 14px rgba(255,255,255,.35),0 10px 20px rgba(94,25,50,.18);
+  box-shadow:inset -5px -8px 14px rgba(0,0,0,.18),inset 5px 5px 12px rgba(255,255,255,.35),0 10px 20px rgba(94,25,50,.2);
   overflow:hidden;
 }
 .tip::before{ /* блик глянца */
@@ -223,24 +242,28 @@ h1 em,h2 em{color:var(--c-primary);font-weight:600;}
 .tip--cat{background:radial-gradient(60% 30% at 50% 55%,rgba(255,232,190,.95) 0%,rgba(255,232,190,0) 70%),#4b1428;}
 .tip--french{background:linear-gradient(180deg,#fffaf6 0 28%,#f6d9d2 30% 100%);}
 .tip--glitter{background:radial-gradient(circle at 30% 30%,#fff 0 1.2px,transparent 1.6px) 0 0/7px 7px,radial-gradient(circle at 70% 60%,#f3e6cf 0 1px,transparent 1.4px) 0 0/9px 9px,linear-gradient(160deg,#e9c9a4,#c9a36a);}
+/* одиночные типсы, парящие вокруг портрета */
+.float-tip{position:absolute;z-index:2;width:clamp(22px,2.4vw,32px);height:auto;aspect-ratio:.56;left:auto;opacity:0;
+  animation:fadeIn 1s var(--ease) forwards, tipFloat 7s ease-in-out infinite both;animation-delay:calc(1.2s + var(--i) * .2s), calc(var(--i) * -1.3s);}
+@keyframes tipFloat{0%,100%{transform:rotate(var(--rot)) translateY(0);}50%{transform:rotate(calc(var(--rot) + 10deg)) translateY(-14px);}}
 
-.bottle{position:absolute;left:50%;bottom:6%;width:clamp(120px,14vw,160px);transform:translateX(-50%);filter:drop-shadow(0 24px 30px rgba(94,25,50,.28));
-  opacity:0;animation:bottleIn 1.2s var(--ease) .25s forwards, floaty 7s ease-in-out 1.8s infinite;}
-@keyframes bottleIn{from{opacity:0;transform:translate(-50%,30px) scale(.9);}to{opacity:1;transform:translate(-50%,0) scale(1);}}
-@keyframes floaty{0%,100%{transform:translate(-50%,0);}50%{transform:translate(-50%,-10px);}}
+.bottle{position:absolute;z-index:3;left:7%;bottom:1%;width:clamp(92px,9vw,124px);filter:drop-shadow(0 22px 26px rgba(94,25,50,.3));
+  opacity:0;animation:bottleIn 1.2s var(--ease) .5s forwards, floaty 7s ease-in-out 2s infinite;}
+@keyframes bottleIn{from{opacity:0;transform:translateY(30px) scale(.9);}to{opacity:1;transform:none;}}
+@keyframes floaty{0%,100%{transform:translateY(0);}50%{transform:translateY(-10px);}}
 .bottle__fill{transition:fill .8s var(--ease);}
 
 .hero__badge{
-  position:absolute;z-index:3;display:flex;align-items:center;gap:12px;padding:12px 16px 12px 12px;border-radius:18px;
-  background:rgba(255,255,255,.82);backdrop-filter:blur(10px);box-shadow:var(--shadow);font-size:13px;line-height:1.3;
+  position:absolute;z-index:4;display:flex;align-items:center;gap:12px;padding:12px 16px 12px 12px;border-radius:18px;
+  background:rgba(255,255,255,.94);box-shadow:var(--shadow);font-size:13px;line-height:1.3;white-space:nowrap;
   opacity:0;animation:heroIn 1s var(--ease) forwards, floaty2 8s ease-in-out infinite;
 }
 .hero__badge strong{display:block;font-size:14.5px;}
 .hero__badge span{color:var(--c-muted);}
-.hero__badge-ico{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;background:var(--c-blush);color:var(--c-primary);font-size:18px;}
-.hero__badge-ava{width:44px;height:44px;border-radius:50%;object-fit:cover;box-shadow:0 0 0 2px #fff,0 0 0 3.5px var(--c-accent);}
-.hero__badge--a{left:0;top:16%;animation-delay:1.6s,2.6s;}
-.hero__badge--b{right:0;top:4%;animation-delay:1.9s,3s;}
+.hero__badge-ico{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;background:var(--c-blush);color:var(--c-primary);font-size:18px;flex-shrink:0;}
+.hero__badge--a{left:0;top:12%;animation-delay:1.5s,2.6s;}
+.hero__badge--b{right:0;bottom:14%;animation-delay:1.8s,3s;}
+.hero__badge--b strong{font-family:var(--f-display);font-style:italic;font-size:22px;font-weight:600;color:var(--c-primary);line-height:1;}
 @keyframes floaty2{0%,100%{translate:0 0;}50%{translate:0 -8px;}}
 
 .sparkle{position:absolute;width:var(--s,18px);height:var(--s,18px);color:var(--c-accent);opacity:0;animation:twinkle 3.2s ease-in-out infinite;animation-delay:var(--d,0s);}
@@ -251,17 +274,23 @@ h1 em,h2 em{color:var(--c-primary);font-weight:600;}
 @keyframes scrollDot{0%{opacity:0;transform:translateY(0);}40%{opacity:1;}100%{opacity:0;transform:translateY(14px);}}
 
 @media (max-width:900px){
-  .hero{min-height:auto;}
-  .hero__grid{grid-template-columns:1fr;}
-  .hero__visual{height:440px;margin-top:10px;}
+  .hero{min-height:auto;padding-top:calc(var(--header-h) + 8px);}
+  .hero__grid{grid-template-columns:1fr;gap:18px;}
+  /* на телефоне фото — первым, чтобы Регину видно сразу при открытии */
+  .hero__visual{order:-1;height:clamp(380px,100vw,560px);}
+  .hero__portrait,.hero__arch{width:min(62%,360px);}
   .hero__scroll{display:none;}
 }
 @media (max-width:480px){
-  .hero__visual{height:380px;}
-  .hero__badge{font-size:12px;padding:10px 12px 10px 10px;}
-  .hero__badge-ico{width:34px;height:34px;}
-  .hero__badge--a{top:0;}
-  .hero__badge--b{display:none;}
+  .hero__badge{font-size:11.5px;padding:8px 12px 8px 8px;gap:9px;border-radius:14px;}
+  .hero__badge strong{font-size:13px;}
+  .hero__badge--b strong{font-size:19px;}
+  .hero__badge-ico{width:30px;height:30px;font-size:14px;border-radius:10px;}
+  .hero__badge--a{display:none;}
+  .hero__badge--b{bottom:16%;}
+  .hero__arch{transform:translate(calc(-50% + 10px),10px);}
+  .fan{left:20%;bottom:12%;}
+  .fan__item{height:118px;width:26px;left:-13px;}
   .hero__actions .btn{flex:1 1 100%;}
 }
 
@@ -287,7 +316,14 @@ h1 em,h2 em{color:var(--c-primary);font-weight:600;}
 .feature h3{margin-bottom:10px;}
 .feature p{color:var(--c-muted);font-size:15px;}
 @media (max-width:960px){.features{grid-template-columns:repeat(2,1fr);}}
-@media (max-width:600px){.features{grid-template-columns:1fr;}}
+@media (max-width:600px){
+  .features{grid-template-columns:1fr;gap:14px;}
+  .feature{display:grid;grid-template-columns:50px 1fr;gap:4px 16px;padding:22px 20px;}
+  .feature__icon{grid-row:span 2;width:50px;height:50px;border-radius:15px;margin:0;}
+  .feature__icon svg{width:23px;height:23px;}
+  .feature h3{font-size:21px;margin:0;align-self:center;}
+  .feature p{font-size:14.5px;}
+}
 
 /* ---------- услуги ---------- */
 .services{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;}
@@ -370,6 +406,7 @@ h1 em,h2 em{color:var(--c-primary);font-weight:600;}
 .work__try{flex-shrink:0;font-size:11.5px;font-weight:700;color:var(--c-primary);padding:7px 11px;border-radius:100px;background:var(--c-blush-soft);}
 .works__note{text-align:center;margin-top:40px;color:var(--c-muted);font-size:14px;}
 @media (max-width:960px){.works{grid-template-columns:repeat(2,1fr);}}
+@media (max-width:600px){.work__tag{display:none;}.work__name{font-size:16px;}}
 @media (max-width:420px){.works{gap:12px;}.work__cap{left:8px;right:8px;bottom:8px;padding:9px 10px;}.work__try{display:none;}.work__name{font-size:16px;}}
 
 /* ---------- как проходит визит ---------- */
@@ -449,6 +486,14 @@ h1 em,h2 em{color:var(--c-primary);font-weight:600;}
 .cert__tips i:nth-child(3){transform:translateY(-12px);}
 .cert__tips i:nth-child(4){transform:translateY(-8px);}
 @media (max-width:900px){.gift__grid{grid-template-columns:1fr;}.cert{max-width:520px;}.cert__card{transform:rotateY(-6deg) rotateX(4deg);}}
+@media (max-width:520px){
+  .cert__card{aspect-ratio:auto;min-height:230px;gap:18px;padding:26px 24px;}
+  .cert__brand{font-size:17px;white-space:nowrap;}
+  .cert__brand img{width:28px;height:28px;}
+  .cert__label{font-size:8.5px;letter-spacing:.22em;}
+  .cert__tips{display:none;}
+  .gift__actions .btn{flex:1 1 100%;}
+}
 
 /* ---------- отзывы ---------- */
 .reviews{position:relative;}
@@ -520,6 +565,7 @@ h1 em,h2 em{color:var(--c-primary);font-weight:600;}
 .footer{background:#22161b;color:rgba(255,255,255,.7);padding:70px 0 34px;font-size:14.5px;}
 .footer__grid{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:34px;margin-bottom:46px;}
 .footer .logo__name{color:#fff;}
+.footer .logo__name em{color:var(--c-accent);}
 .footer__about{margin-top:18px;max-width:320px;}
 .footer h4{font-size:11.5px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--c-accent);margin-bottom:16px;}
 .footer ul{list-style:none;display:grid;gap:9px;}
@@ -545,7 +591,10 @@ h1 em,h2 em{color:var(--c-primary);font-weight:600;}
 .fab.is-open .fab__toggle svg{transform:rotate(135deg);}
 
 /* ---------- блёстки за курсором (canvas) ---------- */
-#glitter{position:fixed;inset:0;pointer-events:none;z-index:150;}
+#glitter{position:fixed;left:0;top:0;width:100vw;height:100vh;pointer-events:none;z-index:150;}
+
+/* бесконечные анимации на паузе, когда блок вне экрана (main.js → .is-off) */
+.is-off *,.is-off *::before,.is-off *::after{animation-play-state:paused !important;}
 
 /* ---------- reveal ---------- */
 .reveal{opacity:0;transform:translateY(34px);transition:opacity 1s var(--ease),transform 1s var(--ease);transition-delay:var(--delay,0s);}

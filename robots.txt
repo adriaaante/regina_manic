@@ -4,4 +4,4 @@ Disallow: /gift-studio.html
 Disallow: /gift-api.php
 Disallow: /gift-data/
 
-Sitemap: https://reginanails.ru/sitemap.xml
+Sitemap: https://adriaaante.github.io/regina_manic/sitemap.xml

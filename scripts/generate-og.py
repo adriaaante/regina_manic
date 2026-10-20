@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Генерирует og-обложку 1200x630 (assets/img/og-cover.png) и иконку
-apple-touch-icon 180x180 в палитре сайта.
+apple-touch-icon 180x180 в палитре сайта. В обложку вставляется
+портрет assets/img/regina/hero.jpg.
 
 Запуск из корня репо: python3 scripts/generate-og.py  (нужен Pillow).
 Шрифты — системные DejaVu (есть кириллица). Запускать после смены
@@ -37,14 +38,26 @@ def sparkle(d, cx, cy, r, fill, s=1):
 W, H = 1200, 630
 img = Image.new("RGB", (W * SS, H * SS), BG)
 d = ImageDraw.Draw(img)
-d.ellipse([(W - 520) * SS, -260 * SS, (W + 180) * SS, 420 * SS], fill=BLUSH)
+d.ellipse([(W - 560) * SS, -200 * SS, (W + 140) * SS, 500 * SS], fill=BLUSH)
 d.ellipse([-200 * SS, (H - 240) * SS, 260 * SS, (H + 200) * SS], fill=GOLD_PALE)
 
-# веер типсов
-colors = [(242, 212, 203), (232, 180, 176), (200, 16, 46), BERRY, (90, 20, 40), (224, 180, 76)]
-for i, c in enumerate(colors):
-    nail(d, 820 + i * 60, 470 - abs(i - 2.5) * 34, 46, 170, c, SS)
-for x, y, r in [(790, 150, 18), (1150, 200, 12), (930, 545, 14)]:
+# портрет Регины в арке (assets/img/regina/hero.jpg)
+ph = Image.open("assets/img/regina/hero.jpg").convert("RGB")
+aw, ah, ax, ay = 340, 425, 790, 120
+ph = ph.resize((aw * SS, ah * SS), Image.LANCZOS)
+mask = Image.new("L", ph.size, 0)
+md = ImageDraw.Draw(mask)
+md.rounded_rectangle([0, aw * SS // 2, aw * SS, ah * SS], radius=26 * SS, fill=255)
+md.ellipse([0, 0, aw * SS, aw * SS], fill=255)
+md.rectangle([0, aw * SS // 2, aw * SS, ah * SS - 30 * SS], fill=255)
+b = 8  # белая рамка
+d.rounded_rectangle([(ax - b) * SS, (ay + aw // 2) * SS, (ax + aw + b) * SS, (ay + ah + b) * SS], radius=32 * SS, fill=(255, 255, 255))
+d.ellipse([(ax - b) * SS, (ay - b) * SS, (ax + aw + b) * SS, (ay + aw + b) * SS], fill=(255, 255, 255))
+img.paste(ph, (ax * SS, ay * SS), mask)
+# типсы и искры вокруг арки
+for x, y, c in [(752, 470, (242, 212, 203)), (1150, 170, (200, 16, 46)), (1160, 430, BERRY)]:
+    nail(d, x, y, 34, 70, c, SS)
+for x, y, r in [(770, 120, 16), (1160, 300, 11), (720, 560, 13)]:
     sparkle(d, x, y, r, GOLD, SS)
 
 serif_b = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSerif-Bold.ttf", 92 * SS)

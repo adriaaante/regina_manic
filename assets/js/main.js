@@ -50,6 +50,8 @@
     burger.addEventListener('click', () => toggle());
     $$('a', menu).forEach(a => a.addEventListener('click', () => toggle(false)));
     document.addEventListener('keydown', e => { if (e.key === 'Escape') toggle(false); });
+    /* меню открыли на узком окне и растянули — иначе body останется без прокрутки */
+    window.addEventListener('resize', () => { if (window.innerWidth > 1080 && menu.classList.contains('is-open')) toggle(false); });
   }
 
   function setupFab() {
@@ -332,6 +334,15 @@
     });
   }
 
+  /* -------- Пауза бесконечных анимаций вне экрана (экономит CPU, прокрутка плавнее) -------- */
+  function setupOffscreenPause() {
+    if (!('IntersectionObserver' in window)) return;
+    const obs = new IntersectionObserver(entries => {
+      entries.forEach(e => e.target.classList.toggle('is-off', !e.isIntersecting));
+    });
+    $$('.hero, .marquee-wrap, .gift, .studio__stage, #works').forEach(el => obs.observe(el));
+  }
+
   /* -------- Флакон в герое: лак переливается цветами веера -------- */
   function setupBottle() {
     const fill = $('.bottle__fill');
@@ -339,7 +350,10 @@
     const tips = $$('.fan__item').map(t => t.style.getPropertyValue('--tip-c')).filter(Boolean);
     if (!tips.length) return;
     let i = 0;
-    setInterval(() => { i = (i + 1) % tips.length; fill.setAttribute('fill', tips[i]); }, 2600);
+    setInterval(() => {
+      if (document.hidden || window.scrollY > window.innerHeight) return;
+      i = (i + 1) % tips.length; fill.setAttribute('fill', tips[i]);
+    }, 2600);
   }
 
   /* -------- Блёстки за курсором (только мышь) -------- */
@@ -420,13 +434,12 @@
       window.open(waLink(message()), '_blank', 'noopener');
     });
     $('#booking-tg')?.addEventListener('click', () => {
-      const text = message();
-      const go = () => window.open(cfg.telegram || 'https://t.me/', '_blank', 'noopener');
-      /* Telegram не принимает текст в ссылке на профиль — копируем его */
-      (navigator.clipboard ? navigator.clipboard.writeText(text) : Promise.reject())
+      /* Telegram не принимает текст в ссылке на профиль — копируем его.
+         Окно открываем сразу в обработчике клика, иначе браузер его заблокирует */
+      (navigator.clipboard ? navigator.clipboard.writeText(message()) : Promise.reject())
         .then(() => { hint.textContent = 'Текст заявки скопирован — вставьте его в чат Telegram.'; hint.classList.add('is-ok'); })
-        .catch(() => {})
-        .finally(go);
+        .catch(() => {});
+      window.open(cfg.telegram || 'https://t.me/', '_blank', 'noopener');
     });
     /* минимальная дата — сегодня */
     const day = form.elements.day;
@@ -446,6 +459,7 @@
     setupWorks();
     setupReveals();
     setupBottle();
+    setupOffscreenPause();
     setupGlitter();
     setupReviews();
     setupBooking();

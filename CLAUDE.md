@@ -10,7 +10,8 @@ dr-vlada-site / ania-psychology-site. Палитра «фарфор + лак»: 
 Шрифты: Cormorant Garamond (заголовки) + Manrope (текст), Google Fonts.
 
 ## Структура
-- `index.html` — лендинг: hero (веер типсов + флакон), лента, «почему ко
+- `index.html` — лендинг: hero (портрет Регины в арке + мини-веер типсов, флакон,
+  парящие типсы; на ≤900px фото идёт ПЕРВЫМ), лента, «почему ко
   мне», услуги, **конструктор маникюра** `#studio`, галерея `#works`, шаги
   визита, обо мне, промо сертификатов `#gift`, отзывы, FAQ, запись+контакты.
 - `prices.html` — полный прайс (отдельная страница под SEO «цены на маникюр»).
@@ -32,8 +33,10 @@ dr-vlada-site / ania-psychology-site. Палитра «фарфор + лак»: 
   нужны всегда (кнопка «Примерить» грузит их в конструктор).
 - `assets/img/logo-mark.svg` — лого (миндальный ноготь в кольце) = favicon.
   `og-cover.png`, `apple-touch-icon.png` — генерит `scripts/generate-og.py`.
-  `regina/about.jpg` (кроп 4:5, фото в лифте) и `regina/avatar.jpg` (бейдж в hero) —
-  реальные фото Регины, оригиналы 640×640 (прислала в чат). Если будут крупнее — заменить.
+  `regina/hero.jpg` (портрет крупным планом, кроп 4:5, preload + fetchpriority —
+  это LCP) и `regina/about.jpg` (фото в лифте, кроп 4:5) — реальные фото Регины,
+  оригиналы 640×640 (прислала в чат). Будут крупнее — заменить, `generate-og.py`
+  вставляет hero.jpg в og-обложку.
 
 ## Заглушки (заменить реальными данными)
 - `config.js`: телефон, WhatsApp, Telegram (`XXXX`), улица, часы (город — Краснодар, подтверждён).
@@ -44,7 +47,10 @@ dr-vlada-site / ania-psychology-site. Палитра «фарфор + лак»: 
   обеих страниц) — образцы.
 - Отзывы, цифры (5+ лет, 1200+, «5,0 · 120+ отзывов», «200+ оттенков»),
   текст «Обо мне» — образцы. Работы в галерее — нарисованы кодом.
-- Домен `reginanails.ru` — плейсхолдер в canonical/og/JSON-LD/robots/sitemap.
+- Абсолютные URL (canonical/og/JSON-LD/sitemap/robots) указывают на
+  `https://adriaaante.github.io/regina_manic/`. Появится домен — заменить везде
+  (`grep -rl adriaaante.github.io`). robots.txt в подпапке проекта поисковики
+  не читают — sitemap подавать вручную в Яндекс.Вебмастер / Search Console.
 
 ## Подарочные сертификаты
 Схема как в dr-vlada-site: данные в ссылке `gift.html#1.<base64url(JSON)>`,
@@ -64,10 +70,18 @@ JSON `{n,a,t,e,m,k}`, номер `RN-ГГММ-XXXX`.
 ## Деплой
 **GitHub Pages** — Deploy from a branch, `main`, папка `/` (root). Прод:
 https://adriaaante.github.io/regina_manic/ — выкатка автоматически после
-push в `main` (~1 мин). Custom domain не настроен; canonical/og/sitemap пока
-указывают на плейсхолдер `reginanails.ru`. PHP на Pages не работает →
+push в `main` (~1 мин). Custom domain не настроен. PHP на Pages не работает →
 gift-api.php мёртв, история сертификатов только в localStorage браузера
 (сами сертификаты работают — всё в ссылке). Для общей истории нужен PHP-хостинг.
+
+## Грабли
+- Холст `#glitter` (блёстки за курсором) — размер строго через CSS 100vw/100vh:
+  без этого при масштабе экрана >100% canvas раздувался в DPR раз.
+- `html,body{overflow-x:clip}` (не hidden) — не создаёт контейнер прокрутки,
+  sticky и колесо мыши работают.
+- Бесконечные анимации вне экрана ставятся на паузу (`.is-off`, main.js →
+  setupOffscreenPause) — иначе прокрутка тяжелее на слабых ноутбуках.
+- Окно Telegram в форме записи открывается синхронно в клике (иначе блокировка попапов).
 
 ## Команды
 - Локально: `python3 -m http.server 8080`.
