@@ -62,9 +62,12 @@ JSON `{n,a,t,e,m,k}`, номер `RN-ГГММ-XXXX`.
 - Обе страницы `noindex`, в sitemap не добавлять; robots закрывает студию.
 
 ## Деплой
-Пока **не настроен** (хостинг/домен не выбраны). Деплоить репозиторий как
-есть (статика из корня). Для общей истории сертификатов нужен PHP-хостинг
-(reg.ru и т.п.); на GitHub Pages всё работает, кроме gift-api.php.
+**GitHub Pages** — Deploy from a branch, `main`, папка `/` (root). Прод:
+https://adriaaante.github.io/regina_manic/ — выкатка автоматически после
+push в `main` (~1 мин). Custom domain не настроен; canonical/og/sitemap пока
+указывают на плейсхолдер `reginanails.ru`. PHP на Pages не работает →
+gift-api.php мёртв, история сертификатов только в localStorage браузера
+(сами сертификаты работают — всё в ссылке). Для общей истории нужен PHP-хостинг.
 
 ## Команды
 - Локально: `python3 -m http.server 8080`.
