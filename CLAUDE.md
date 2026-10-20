@@ -68,6 +68,7 @@ JSON `{n,a,t,e,m,k}`, номер `RN-ГГММ-XXXX`.
 - Обе страницы `noindex`, в sitemap не добавлять; robots закрывает студию.
 
 ## Деплой
+**Правило заказчика: всегда пушить в `main`** (рабочая ветка сессии — дополнительно).
 **GitHub Pages** — Deploy from a branch, `main`, папка `/` (root). Прод:
 https://adriaaante.github.io/regina_manic/ — выкатка автоматически после
 push в `main` (~1 мин). Custom domain не настроен. PHP на Pages не работает →
